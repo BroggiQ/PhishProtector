@@ -9,10 +9,19 @@ using System.Xml.Linq;
 using OpenQA.Selenium.Interactions;
 
 class Program
-{ 
-    private static  readonly string _screenFolder = @"C:\Users\Akutsu\source\repos\PhishProtector\PhishExplorer\Screens\";
+{
+    private static string _screenFolder = "";
     static void Main(string[] args)
     {
+
+        #if DEBUG
+                _screenFolder = @"C:\Users\Akutsu\Desktop\Phishing\Screens\";
+        #else
+                _screenFolder = Path.Combine(Directory.GetCurrentDirectory(),"Screens");
+
+        #endif
+
+
         // liste de sites web à visiter
         //TODO site livraison, edf, free, orange, impot, caf, ameli, banque, gmail ...
         List<string> sites = new List<string>() { "https://fr.yahoo.com/","https://store.steampowered.com", "https://www.amazon.fr",
@@ -39,34 +48,35 @@ class Program
 
 
         IWebDriver driver = new FirefoxDriver(options);
- 
+
 
         // parcourir chaque site et prendre une capture d'écran
         foreach (string site in sites)
         {
             driver.Navigate().GoToUrl(site);
- 
+
 
             // accepter les cookies
             try
             {
- 
-                List<string> cookieTexts = new List<string>() {  "Autoriser les cookies essentiels et optionnels", "Accepter les cookies","Accepter tout", "Tout accepter", "Accepter les cookies", "Accepter et fermer" };
+
+                List<string> cookieTexts = new List<string>() { "Autoriser les cookies essentiels et optionnels", "Accepter les cookies", "Accepter tout", "Tout accepter", "Accepter les cookies", "Accepter et fermer" };
                 WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
                 foreach (string cookieText in cookieTexts)
                 {
-                 IList<IWebElement> cookieButtons = driver.FindElements(By.XPath("//button[.='" + cookieText + "'] | //input[.='" + cookieText + "'] | //span[.='" + cookieText + "']"));
-                     // IList<IWebElement> cookieButtons = driver.FindElements(By.XPath("//*[@value='" + cookieText + "']"));
+                    IList<IWebElement> cookieButtons = driver.FindElements(By.XPath("//button[.='" + cookieText + "'] | //input[.='" + cookieText + "'] | //span[.='" + cookieText + "']"));
+                    // IList<IWebElement> cookieButtons = driver.FindElements(By.XPath("//*[@value='" + cookieText + "']"));
                     if (cookieButtons.Count > 0)
                     {
                         IWebElement cookieButton = cookieButtons[0];
                         if (cookieButton != null)
                         {
 
-                            if(cookieButton.Displayed && cookieButton.Enabled) {
+                            if (cookieButton.Displayed && cookieButton.Enabled)
+                            {
                                 wait.Until(ExpectedConditions.ElementToBeClickable(cookieButton));
                                 cookieButton.Click();
-                                  break;
+                                break;
                             }
                             else
                             {
@@ -86,9 +96,9 @@ class Program
 
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("Consent error"+ ex.Message);
+                Console.WriteLine("Consent error" + ex.Message);
             }
 
 
@@ -100,13 +110,12 @@ class Program
             // extraire le nom du site sans le protocole et sans l'extension
             var uriSite = new Uri(site);
             string siteName = uriSite.Host;
-            string screenName = string.Format("{0}_{1}.{2}", DateTime.Now.ToString("yyyy-MM-dd"), siteName,"png");
+            string screenName = string.Format("{0}_{1}.{2}", DateTime.Now.ToString("yyyy-MM-dd"), siteName, "png");
 
-
-            string folderSitePath = Path.Combine(_screenFolder , siteName);
+            string folderSitePath = Path.Combine(_screenFolder, siteName);
             if (!Directory.Exists(folderSitePath))
                 Directory.CreateDirectory(folderSitePath);
-            string imagePath = Path.Combine(folderSitePath, screenName );
+            string imagePath = Path.Combine(folderSitePath, screenName);
 
             screenshot.SaveAsFile(imagePath, ScreenshotImageFormat.Png);
 
