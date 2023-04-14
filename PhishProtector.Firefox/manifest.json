@@ -3,7 +3,9 @@
 	"manifest_version": 2,
 	"name": "PhishProtector",
 	"version": "1.0",
-"permissions": [ "<all_urls>" ],
+"permissions": [ "<all_urls>",
+    "webNavigation",
+    "activeTab" ],
 	"description": "Protection contre le phishing",
 
 	"icons": {

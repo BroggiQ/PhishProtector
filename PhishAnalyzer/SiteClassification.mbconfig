@@ -52,7 +52,7 @@
   "TrainingOption": {
     "Version": 0,
     "Type": "ClassificationTrainingOption",
-    "TrainingTime": 0,
+    "TrainingTime": 2147483647,
     "Seed": 0
   }
 }
