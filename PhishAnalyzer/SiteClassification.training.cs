@@ -26,14 +26,6 @@ namespace PhishAnalyzer
             var pipeline = BuildPipeline(mlContext);
             var model = pipeline.Fit(trainData);
 
-            var onnxPath = @"C:\Users\Akutsu\source\repos\PhishProtector\PhishExplorer\SiteClassification.onnx";
-
-            // Convertissez le modèle ML.NET en modèle ONNX et sauvegardez-le
-            using (var fileStream = new FileStream(onnxPath, FileMode.Create))
-            {
-                mlContext.Model.ConvertToOnnx(model, trainData, fileStream);
-
-            }
             return model;
         }
 

@@ -15,56 +15,62 @@ browser.webNavigation.onBeforeNavigate.addListener((details) => {
         .then((tabs) => {
             const tab = tabs[0];
             console.log(tab.url);
-			const baseUrl = tab.url.origin;
+			const baseUrl = tab.url;
 			console.log("Base de l'URL :", baseUrl);
 			
 			
-			fetch('https://mon-api.com/path', {
-				  method: 'POST',
-				  headers: {
-					'Content-Type': 'application/json'
-				  },
-				  body: JSON.stringify({
-					targetUrl: baseUrl
-				  })
+	 	
+			// Capturer la capture d'écran de l'onglet actif
+			browser.tabs.captureTab(tab.id)
+				.then((dataUrl) => {
+					sendToAntiPhishingAPI(baseUrl, dataUrl);
 				})
-				  .then(response => {
-					if (!response.ok) {
-					  throw new Error('Réponse de l\'API invalide');
-					}
-					return response.json();
-				  })
-				  .then(data => {
-					  if(data == true){
-						 console.log('Site valide');
-					  }
-					  else{
-						console.log('Site invalide');
-					  }
-					
-					
-				  })
-				  .catch(error => {
-					console.error('Erreur lors de l\'appel de l\'API :', error);
-				  });
-							
+				.catch((error) => {
+					console.error("Impossible de capturer la capture d'écran de l'onglet :", error);
+				});
 			
 			
 			
 			
-			
-			    // Capturer la capture d'écran de l'onglet actif
-					/*browser.tabs.captureTab(tab.id)
-					  .then((dataUrl) => {
-						console.log("Capture d'écran de l'onglet :", dataUrl);
-					  })
-					  .catch((error) => {
-						console.error("Impossible de capturer la capture d'écran de l'onglet :", error);
-					  });
-					  */
+			    
+					  
      
         })
         .catch((error) => {
             console.error("Impossible de récupérer l'onglet actif :", error);
-        });
+		});
+
+
+	async function sendToAntiPhishingAPI(url, imageData) {
+		try {
+			console.log("sendToAntiPhishingAPI");
+			const apiURL = 'http://localhost:5001/api/analyze';
+
+			// Convertir l'imageData en Blob
+			const imageBlob = new Blob([new Uint8Array(imageData)], { type: 'image/png' });
+
+			// Créer un objet FormData pour envoyer l'URL et l'image
+			const formData = new FormData();
+			formData.append('url', url);
+			//formData.append('screenBytes', imageBlob);
+			formData.append('screenBytes', imageData);
+
+			// Envoyer la requête à l'API
+			const response = await fetch(apiURL, {
+				method: 'POST',
+				body: formData,
+			});
+
+			// Vérifier si la requête a réussi
+			if (!response.ok) {
+				throw new Error(`Erreur lors de l'appel à l'API : ${response.statusText}`);
+			}
+
+			// Traiter la réponse de l'API
+			const result = await response.text();
+			console.log('Résultat de l\'API:', result);
+		} catch (error) {
+			console.error('Erreur lors de l\'envoi des données à l\'API Anti-Phishing :', error);
+		}
+	}
 });

@@ -14,4 +14,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PhishAnalyzer\PhishAnalyzer.csproj" />
+  </ItemGroup>
+
 </Project>

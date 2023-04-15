@@ -23,9 +23,12 @@ namespace PhishProtector.Windows
             ApplicationConfiguration.Initialize();
             Application.Run(new HomePage());
         }
-
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-    WebHost.CreateDefaultBuilder(args)
-        .UseStartup<Startup>();
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .UseKestrel(options =>
+                {
+                    options.ListenAnyIP(5001); // Écoute sur le port 5001
+                });
     }
 }
