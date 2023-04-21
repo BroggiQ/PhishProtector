@@ -3,19 +3,26 @@
 	"manifest_version": 2,
 	"name": "PhishProtector",
 	"version": "1.0",
-"permissions": [ "<all_urls>",
-    "webNavigation",
-    "activeTab" ],
+	"permissions": [
+		"<all_urls>",
+		"webRequest",
+		"webRequestBlocking",
+		"webNavigation",
+		"tabs",
+		"activeTab"
+	],
+	"browser_action": {
+		"default_icon": {
+			"48": "ok.png"
+		},
+		"default_popup": "popup.html"
+	},
 	"description": "Protection contre le phishing",
 
 	"icons": {
 		"48": "Icon.png"
 	},
-	"browser_action": {
-		"default_icon": "Icon.png",
-		"default_title": "Beastify"
-	},
-
+ 
 	"background": {
 		"scripts": [ "background.js" ]
 	}

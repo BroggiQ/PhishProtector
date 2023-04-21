@@ -1,25 +1,32 @@
-// JavaScript source code
+ 
 browser.browserAction.onClicked.addListener(() => {
     // Le code ici sera exécuté lorsque l'utilisateur cliquera sur l'icône de l'extension.
     console.log("L'icône de l'extension a été cliquée !");
 
 
 });
+// Detecte l'url appelé
+//TODO cas d'une redirection aussitot?'
+//TODO gestion multi onglet icon par tab
+browser.webRequest.onBeforeRequest.addListener(
+	analyzeRequest,
+	{ urls: ['<all_urls>'], types: ['main_frame'] },
+	['blocking']
+);
 
-browser.webNavigation.onBeforeNavigate.addListener((details) => {
-  // L'utilisateur est en train de naviguer vers une nouvelle page
-  console.log("Changement de site :", details.url);
-  
-      // Récupère l'onglet actif
-    browser.tabs.query({ active: true, currentWindow: true })
-        .then((tabs) => {
-            const tab = tabs[0];
-            console.log(tab.url);
-			const baseUrl = tab.url;
-			console.log("Base de l'URL :", baseUrl);
-			
-			
-	 	
+function analyzeRequest(requestDetails) {
+	// L'utilisateur est en train de naviguer vers une nouvelle page
+	console.log("Changement de site :", requestDetails.url);
+
+	const baseUrl = requestDetails.url;
+	console.log("Base de l'URL :", baseUrl);
+
+	// Récupère l'onglet actif
+	browser.tabs.query({ active: true, currentWindow: true })
+		.then((tabs) => {
+			const tab = tabs[0];
+			console.log(tab.url);
+
 			// Capturer la capture d'écran de l'onglet actif
 			browser.tabs.captureTab(tab.id)
 				.then((dataUrl) => {
@@ -28,17 +35,11 @@ browser.webNavigation.onBeforeNavigate.addListener((details) => {
 				.catch((error) => {
 					console.error("Impossible de capturer la capture d'écran de l'onglet :", error);
 				});
-			
-			
-			
-			
-			    
-					  
-     
-        })
-        .catch((error) => {
-            console.error("Impossible de récupérer l'onglet actif :", error);
+		})
+		.catch((error) => {
+			console.error("Impossible de récupérer l'onglet actif :", error);
 		});
+
 
 
 	async function sendToAntiPhishingAPI(url, imageData) {
@@ -46,13 +47,14 @@ browser.webNavigation.onBeforeNavigate.addListener((details) => {
 			console.log("sendToAntiPhishingAPI");
 			const apiURL = 'http://localhost:5001/api/analyze';
 
-			// Convertir l'imageData en Blob
-			const imageBlob = new Blob([new Uint8Array(imageData)], { type: 'image/png' });
-
 			// Créer un objet FormData pour envoyer l'URL et l'image
 			const formData = new FormData();
 			formData.append('url', url);
+
+			// Convertir l'imageData en Blob
+			//const imageBlob = new Blob([new Uint8Array(imageData)], { type: 'image/png' });
 			//formData.append('screenBytes', imageBlob);
+
 			formData.append('screenBytes', imageData);
 
 			// Envoyer la requête à l'API
@@ -67,10 +69,19 @@ browser.webNavigation.onBeforeNavigate.addListener((details) => {
 			}
 
 			// Traiter la réponse de l'API
-			const result = await response.text();
+			const result = await response.json();
 			console.log('Résultat de l\'API:', result);
+			if (result) {
+				browser.browserAction.setIcon({ path: { "48": "ok.png" } });
+
+			}
+			else {
+				browser.browserAction.setIcon({ path: { "48": "ko.png" } });
+			}
+
 		} catch (error) {
-			console.error('Erreur lors de l\'envoi des données à l\'API Anti-Phishing :', error);
+			browser.browserAction.setIcon({ path: { "48": "alerte.png" } });
 		}
 	}
-});
+}
+ 
