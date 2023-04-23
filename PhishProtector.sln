@@ -7,17 +7,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhishExplorer", "PhishExplo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PhishProtector.Firefox", "PhishProtector.Firefox", "{579B9F47-78F3-4B28-AB27-B73F46606C3F}"
 	ProjectSection(SolutionItems) = preProject
-		PhishProtector.Firefox\alerte.png = PhishProtector.Firefox\alerte.png
 		PhishProtector.Firefox\background.js = PhishProtector.Firefox\background.js
-		PhishProtector.Firefox\Icon.png = PhishProtector.Firefox\Icon.png
 		PhishProtector.Firefox\manifest.json = PhishProtector.Firefox\manifest.json
-		PhishProtector.Firefox\ko.png = PhishProtector.Firefox\ko.png
-		PhishProtector.Firefox\ok.png = PhishProtector.Firefox\ok.png
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhishProtector.Windows", "PhishProtector.Windows\PhishProtector.Windows.csproj", "{DDCBF112-EBB5-4212-A635-8146893B65F9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhishAnalyzer", "PhishAnalyzer\PhishAnalyzer.csproj", "{5784C47B-89AE-485E-975A-6128202F982B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Icons", "Icons", "{9FEE2F0B-1643-442B-AC17-383E63434719}"
+	ProjectSection(SolutionItems) = preProject
+		PhishProtector.Firefox\alerte.png = PhishProtector.Firefox\alerte.png
+		PhishProtector.Firefox\Icon.png = PhishProtector.Firefox\Icon.png
+		PhishProtector.Firefox\ko.png = PhishProtector.Firefox\ko.png
+		PhishProtector.Firefox\ok.png = PhishProtector.Firefox\ok.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,6 +58,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9FEE2F0B-1643-442B-AC17-383E63434719} = {579B9F47-78F3-4B28-AB27-B73F46606C3F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1282F62F-2EA2-4712-A3F3-8BA08548DB35}

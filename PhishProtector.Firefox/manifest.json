@@ -13,14 +13,14 @@
 	],
 	"browser_action": {
 		"default_icon": {
-			"48": "ok.png"
+			"48": "Icons/ok.png"
 		},
 		"default_popup": "popup.html"
 	},
 	"description": "Protection contre le phishing",
 
 	"icons": {
-		"48": "Icon.png"
+		"48": "Icons/Icon.png"
 	},
  
 	"background": {

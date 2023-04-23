@@ -72,15 +72,15 @@ function analyzeRequest(requestDetails) {
 			const result = await response.json();
 			console.log('Résultat de l\'API:', result);
 			if (result) {
-				browser.browserAction.setIcon({ path: { "48": "ok.png" } });
+				browser.browserAction.setIcon({ path: { "48": "Icons/ok.png" } });
 
 			}
 			else {
-				browser.browserAction.setIcon({ path: { "48": "ko.png" } });
+				browser.browserAction.setIcon({ path: { "48": "Icons/ko.png" } });
 			}
 
 		} catch (error) {
-			browser.browserAction.setIcon({ path: { "48": "alerte.png" } });
+			browser.browserAction.setIcon({ path: { "48": "Icons/alerte.png" } });
 		}
 	}
 }
