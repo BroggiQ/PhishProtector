@@ -8,9 +8,9 @@ class Program
     {
 
 
+        // list of websites to visit
+        // TODO delivery site, edf, free, orange, tax, caf, ameli, bank, gmail ...
 
-        // liste de sites web à visiter
-        //TODO site livraison, edf, free, orange, impot, caf, ameli, banque, gmail ...
         List<string> sites = SiteList.GetSites();
 
 
@@ -25,29 +25,31 @@ class Program
                 int counter = 0;
                 webCrawler.NavigateTo(site);
                 var mainScreenshot = webCrawler.TakeScreenshot();
-                if (mainScreenshot != null) {
+                if (mainScreenshot != null)
+                {
                     screenshotTaker.SaveScreenshot(mainScreenshot, site, counter);
                 }
 
                 var internalLinks = webCrawler.GetInternalLinks(site);
-               
+
                 foreach (string internalLink in internalLinks)
                 {
                     counter++;
                     webCrawler.NavigateTo(internalLink);
 
                     var screenshot = webCrawler.TakeScreenshot();
-                    if (screenshot != null) {
+                    if (screenshot != null)
+                    {
                         screenshotTaker.SaveScreenshot(screenshot, site, counter);
 
                     }
-                   
+
 
                 }
             }
         }
 
 
- 
+
     }
 }

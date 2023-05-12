@@ -3,11 +3,6 @@ using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PhishExplorer
 {
@@ -17,13 +12,13 @@ namespace PhishExplorer
 
         public WebCrawler()
         {
-            // crée un profil personnalisé pour accepter les cookies
+            // create a custom profile to accept cookies
             FirefoxProfile profile = new FirefoxProfile();
             profile.SetPreference("network.cookie.cookieBehavior", 0);
 
 
 
-            // configure le navigateur
+            // configure the browser
             FirefoxOptions options = new FirefoxOptions();
             options.Profile = profile;
 
@@ -31,7 +26,7 @@ namespace PhishExplorer
             options.AddArgument("--height=1024 ");
 
 
-            // configure le navigateur en mode headless
+            // configure the browser in headless mode
             options.AddArgument("--headless");
 
 
@@ -43,9 +38,8 @@ namespace PhishExplorer
             try
             {
                 _driver.Navigate().GoToUrl(url);
-                // accepter les cookies
 
-
+                // accept cookies
                 List<string> cookieTexts = new List<string>() { "Autoriser les cookies essentiels et optionnels", "Accepter les cookies", "Accepter tout", "Tout accepter", "Accepter les cookies", "Accepter et fermer" };
                 WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
                 foreach (string cookieText in cookieTexts)
@@ -126,7 +120,7 @@ namespace PhishExplorer
 
         public void Dispose()
         {
-            // Fermer le WebDriver
+            // Close the WebDriver
             _driver.Quit();
         }
     }

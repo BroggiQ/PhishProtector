@@ -1,8 +1,8 @@
 ﻿
 using Microsoft.AspNetCore.Mvc;
 using PhishAnalyzer;
-using System.Globalization;
-using System.Security.Policy;
+using PhishAnalyzer.Models;
+ using System.Text.Json;
 
 namespace PhishProtector.Windows.Controllers
 {
@@ -13,7 +13,7 @@ namespace PhishProtector.Windows.Controllers
     {
         [HttpPost]
         //  public IActionResult Post([FromForm] string url, [FromForm] byte[] screenBytes)
-        public IActionResult Post([FromForm] string url, [FromForm] string screenBytes)
+        public IActionResult Post([FromForm] string url, [FromForm] string screenBytes, [FromForm] string certificateInfoJson)
         {
             try
             {
@@ -24,6 +24,9 @@ namespace PhishProtector.Windows.Controllers
 
                     byte[] imageByteArray = Convert.FromBase64String(base64String);
 
+                    // Certificate information analysis
+                    var certificateInfo = JsonSerializer.Deserialize<CertificateInfo>(certificateInfoJson);
+                    bool isCertificateSafe = AnalyzeCertificate.IsReliableCertificate(certificateInfo, url);
 
                     SiteClassification.ModelInput sampleData = new SiteClassification.ModelInput()
                     {
@@ -37,29 +40,29 @@ namespace PhishProtector.Windows.Controllers
                     if (result != null  )
                     {
  
-                        if (UriComparaison.IsSameOfficialSite(url, result.PredictedLabel)) {
-                            //Le site  ressemble à un site sous surveillance et l'url est bonne
+                        if (UriComparison.IsSameOfficialSite(url, result.PredictedLabel)) {
+                            // The website appears to be under surveillance and the URL is valid.
                             return Ok(true);
                         }
                         else {
-                            //Le site  ressemble à un site sous surveillance mais l'url n'est pas la même
-                            //Ameliorer ce système pour prendre en compte les filliales....
+                            // The website appears to be under surveillance, but the URL is different.
+                            // Improve this system to consider subsidiaries as well...
                             return Ok(false);
                         }
 
 
                     }
-                    else { 
-                        //Le site ne ressemble à aucun site sous surveillance donc c'est bon
+                    else {
+                        // The website does not resemble any monitored site, so it is considered safe.
                         return Ok(true);
                     }
                 }
-                //L'url ou le screen du site est vie impossible de traiter le site
+                // The URL or screenshot of the website is old, making it impossible to process the site.
                 return BadRequest("Url and/or Screen are empty");
             }
             catch (Exception ex)
             {
-                //Erreur interne
+                //Internal error
                 return StatusCode(500, ex.Message); 
              }
         }

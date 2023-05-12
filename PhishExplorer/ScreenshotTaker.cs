@@ -1,9 +1,5 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace PhishExplorer
 {
@@ -25,7 +21,7 @@ namespace PhishExplorer
             public void SaveScreenshot(Screenshot screenshot, string originalSiteUrl, int counter)
         {
 
-            // extraire le nom du site sans le protocole et sans l'extension
+            // Extract the site name without the protocol and the extension
             var uriSite = new Uri(originalSiteUrl);
             string siteName = uriSite.Host;
  

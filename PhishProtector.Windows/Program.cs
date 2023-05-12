@@ -28,7 +28,7 @@ namespace PhishProtector.Windows
                 .UseStartup<Startup>()
                 .UseKestrel(options =>
                 {
-                    options.ListenAnyIP(5001); // Écoute sur le port 5001
+                    options.ListenAnyIP(5001); // Listening on port 5001.
                 });
     }
 }

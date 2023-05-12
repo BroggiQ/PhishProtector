@@ -17,12 +17,12 @@
 		},
 		"default_popup": "popup.html"
 	},
-	"description": "Protection contre le phishing",
+	"description": "Protection against phishing",
 
 	"icons": {
 		"48": "Icons/Icon.png"
 	},
- 
+
 	"background": {
 		"scripts": [ "background.js" ]
 	}

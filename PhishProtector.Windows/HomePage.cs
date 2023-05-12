@@ -25,7 +25,7 @@ namespace PhishProtector.Windows
 
             titleLabel = new Label
             {
-                Text = "Bienvenue dans l'application Anti-Phishing",
+                Text = "Welcome to the Anti-Phishing application.",
                 Font = new Font("Arial", 24, FontStyle.Bold),
                 AutoSize = true
             };
@@ -34,7 +34,7 @@ namespace PhishProtector.Windows
 
             descriptionLabel = new Label
             {
-                Text = "Protégez-vous contre les attaques de phishing avec notre solution intelligente et efficace.",
+                Text = "Protect yourself against phishing attacks with our intelligent and effective solution.",
                 Font = new Font("Arial", 14, FontStyle.Regular),
                 AutoSize = true
             };
@@ -43,7 +43,7 @@ namespace PhishProtector.Windows
 
             protectionStatusLabel = new Label
             {
-                Text = "État: Protection activée",
+                Text = "Status: Protection enabled.",
                 Font = new Font("Arial", 14, FontStyle.Bold),
                 AutoSize = true
             };
