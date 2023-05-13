@@ -6,6 +6,7 @@ namespace PhishAnalyzer
     {
         private static PredictionEngine<ModelInput, ModelOutput> _predictionEngineInstance;
 
+
         public static PredictionEngine<ModelInput, ModelOutput> PredictionEngineInstance
         {
             get

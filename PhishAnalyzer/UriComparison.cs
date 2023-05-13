@@ -53,7 +53,12 @@
             return sldAndTld;
         }
 
-
+        /// <summary>
+        /// Algorithm of the Levenshtein Distance
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="t"></param>
+        /// <returns></returns>
         public static int CalculateLevenshteinDistance(string s, string t)
         {
             int sLen = s.Length;

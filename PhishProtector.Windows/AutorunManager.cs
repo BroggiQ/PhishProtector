@@ -5,6 +5,10 @@ using System.Reflection;
 
 namespace PhishProtector.Windows
 {
+    /// <summary>
+    /// In progress
+    /// The goal is to run the windows apps at the start of Windows 
+    /// </summary>
     public class AutorunManager
     {
         private const string RunKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";

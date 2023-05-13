@@ -11,7 +11,9 @@ namespace PhishProtector.Windows
         {
             InitializeComponent();
         }
-
+        /// <summary>
+        /// This is a base for the software home page, it will warn that the protection is active or not and give a list of identified risk sites
+        /// </summary>
         private void InitializeComponent()
         {
             this.Text = "Anti-Phishing App";
