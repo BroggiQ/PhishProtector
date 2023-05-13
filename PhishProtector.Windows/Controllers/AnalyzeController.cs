@@ -11,8 +11,15 @@ namespace PhishProtector.Windows.Controllers
     [ApiController]
     public class AnalyzeController : ControllerBase
     {
+        /// <summary>
+        /// This is the main api that will analyze an url
+        /// TODOThe next target is to analyze all information : url, html code, screens, certificate and create a reliability score for each criteria
+        /// </summary>
+        /// <param name="url">The target url</param>
+        /// <param name="screenBytes">The screenshot took by the browser extension</param>
+        /// <param name="certificateInfoJson">The certificate received</param>
+        /// <returns></returns>
         [HttpPost]
-        //  public IActionResult Post([FromForm] string url, [FromForm] byte[] screenBytes)
         public IActionResult Post([FromForm] string url, [FromForm] string screenBytes, [FromForm] string certificateInfoJson)
         {
             try

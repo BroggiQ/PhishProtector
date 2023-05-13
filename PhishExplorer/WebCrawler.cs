@@ -33,13 +33,19 @@ namespace PhishExplorer
             _driver = new FirefoxDriver(options);
         }
 
+        /// <summary>
+        /// The webcrawler go the specified url
+        /// </summary>
+        /// <param name="url"></param>
         public void NavigateTo(string url)
         {
             try
             {
                 _driver.Navigate().GoToUrl(url);
 
-                // accept cookies
+                // We have to accept the cookies to remove a maximum of the popups
+                //TODO create a list by country
+                //I tried to automaticly accept the cookie but it doesn't work
                 List<string> cookieTexts = new List<string>() { "Autoriser les cookies essentiels et optionnels", "Accepter les cookies", "Accepter tout", "Tout accepter", "Accepter les cookies", "Accepter et fermer" };
                 WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
                 foreach (string cookieText in cookieTexts)
@@ -82,6 +88,11 @@ namespace PhishExplorer
             }
         }
 
+        /// <summary>
+        /// To have a sufficient number of screenshots we take the internal links of the site
+        /// </summary>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
         public List<string> GetInternalLinks(string baseUrl)
         {
             var links = new List<string>();
@@ -93,7 +104,7 @@ namespace PhishExplorer
             /*foreach (var anchorTag in anchorTags)
             {
                 var href = anchorTag.GetAttribute("href");
-                //On précse que l'on reste sur le meme site
+                //TODO Need to check if the site is from the same base url
                 if (!string.IsNullOrEmpty(href) && href.StartsWith(baseUrl))
                 {
                     links.Add(href);
@@ -103,11 +114,15 @@ namespace PhishExplorer
             return hrefs.Distinct().Take(20).ToList();
         }
 
+        /// <summary>
+        /// Take a screenshot of the website
+        /// TODO define a format (size...) to optimize to ml.net model
+        /// </summary>
+        /// <returns></returns>
         public Screenshot TakeScreenshot()
         {
             try
             {
-
                 return ((ITakesScreenshot)_driver).GetScreenshot();
             }
             catch (Exception ex)
@@ -118,6 +133,9 @@ namespace PhishExplorer
             }
         }
 
+        /// <summary>
+        /// Dispose the webcrawler
+        /// </summary>
         public void Dispose()
         {
             // Close the WebDriver

@@ -5,7 +5,12 @@ namespace PhishAnalyzer
 {
     public static class AnalyzeCertificate
     {
-
+        /// <summary>
+        /// This have to analyze the certificate, the target is to give a fiability score
+        /// </summary>
+        /// <param name="certificateInfo"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
         public static bool IsReliableCertificate(CertificateInfo certificateInfo, string url)
         {
             // Check the issuer of the certificate
@@ -22,6 +27,12 @@ namespace PhishAnalyzer
             return isIssuerTrusted && isCertificateValid && isSubjectValid;
         }
 
+        /// <summary>
+        /// Check if the certificate from a trusted issuer
+        /// TODO get a white list of the trusted issuer
+        /// </summary>
+        /// <param name="issuer"></param>
+        /// <returns></returns>
         private static bool IsTrustedIssuer(string issuer)
         {
             // List of trusted issuers
@@ -29,6 +40,12 @@ namespace PhishAnalyzer
             return true;
         }
 
+        /// <summary>
+        /// Check if the Subject is valid
+        /// </summary>
+        /// <param name="subject"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
         private static bool IsSubjectValid(string subject, string url)
         {
             // Extract the domain name from the URL

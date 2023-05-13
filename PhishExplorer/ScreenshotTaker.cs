@@ -17,14 +17,19 @@ namespace PhishExplorer
 
 #endif
         }
-
-            public void SaveScreenshot(Screenshot screenshot, string originalSiteUrl, int counter)
+        /// <summary>
+        /// This function save the screenshot in png under the format date + url + counter (for the internal link)
+        /// </summary>
+        /// <param name="screenshot"></param>
+        /// <param name="originalSiteUrl"></param>
+        /// <param name="counter"></param>
+        public void SaveScreenshot(Screenshot screenshot, string originalSiteUrl, int counter)
         {
 
             // Extract the site name without the protocol and the extension
             var uriSite = new Uri(originalSiteUrl);
             string siteName = uriSite.Host;
- 
+
             string screenName = string.Format("{0}_{1}_{2}.{3}", DateTime.Now.ToString("yyyy-MM-dd"), siteName, counter, "png");
 
             string folderSitePath = Path.Combine(_screenFolder, siteName);
@@ -34,6 +39,6 @@ namespace PhishExplorer
 
             screenshot.SaveAsFile(imagePath, ScreenshotImageFormat.Png);
         }
-  
+
     }
 }
