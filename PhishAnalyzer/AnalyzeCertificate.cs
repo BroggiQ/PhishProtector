@@ -5,32 +5,54 @@ namespace PhishAnalyzer
 {
     public static class AnalyzeCertificate
     {
+ 
 
-        public static bool IsReliableCertificate(CertificateInfo certificateInfo, string url)
+        /// <summary>
+        /// Check if the date of the certificate is valid
+        /// </summary>
+        /// <param name="certificateInfo"></param>
+        /// <returns></returns>
+        internal static bool IsDateValid(CertificateInfo certificateInfo)
         {
-            // Check the issuer of the certificate
-            bool isIssuerTrusted = IsTrustedIssuer(certificateInfo.Issuer);
+            bool isCertificateValid = false;
+            if (certificateInfo.Validity != null) {
+                // Check the expiration date of the certificate
+                DateTimeOffset now = DateTimeOffset.UtcNow;
 
-            // Check the expiration date of the certificate
-            DateTimeOffset now = DateTimeOffset.UtcNow;
-            bool isCertificateValid = now >= certificateInfo.Validity.NotBefore && now <= certificateInfo.Validity.NotAfter;
-
-            // Check the subject of the certificate
-            bool isSubjectValid = IsSubjectValid(certificateInfo.Subject, url);
-
-            // If all checks are correct, the certificate is considered safe
-            return isIssuerTrusted && isCertificateValid && isSubjectValid;
+                isCertificateValid = now >= certificateInfo.Validity.NotBefore && now <= certificateInfo.Validity.NotAfter;
+            }
+            return isCertificateValid;
         }
 
-        private static bool IsTrustedIssuer(string issuer)
+        /// <summary>
+        /// Check the issuer of the certificate
+        /// </summary>
+        /// <param name="certificateInfo"></param>
+        /// <returns></returns>
+        internal static bool IsTrustedIssuer(CertificateInfo certificateInfo)
         {
-            // List of trusted issuers
-            //TODO Mozilla Included CA Certificate List : https://wiki.mozilla.org/CA/Included_Certificates
-            return true;
+            bool isTrustedIssuer = false;
+            if(certificateInfo.Issuer != null)
+            {
+                string issuer = certificateInfo.Issuer;
+                // List of trusted issuers
+                //TODO Mozilla Included CA Certificate List : https://wiki.mozilla.org/CA/Included_Certificates
+
+            }
+            return isTrustedIssuer;
         }
 
-        private static bool IsSubjectValid(string subject, string url)
+        /// <summary>
+        /// Check the subject of the certificate
+        /// </summary>
+        /// <param name="certificateInfo"></param>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        internal static bool IsSubjectValid(CertificateInfo certificateInfo, string url)
         {
+            bool isSubjectValid = false;
+            if(certificateInfo.Subject != null) { 
+            string subject = certificateInfo.Subject;
             // Extract the domain name from the URL
             var match = Regex.Match(url, @"https?://(www\.)?([-\w]+(\.\w[-\w]*)+)");
             if (!match.Success)
@@ -63,8 +85,8 @@ namespace PhishAnalyzer
                     return true;
                 }
             }
-
-            return false;
+            }
+            return isSubjectValid;
         }
     }
 }
