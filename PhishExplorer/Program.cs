@@ -1,5 +1,8 @@
 ﻿
 using PhishExplorer;
+using PhishHelper;
+using PhishHelper.Models;
+using System.Security.Cryptography.X509Certificates;
 
 class Program
 {
@@ -11,7 +14,7 @@ class Program
         // list of websites to visit
         // TODO delivery site, edf, free, orange, tax, caf, ameli, bank, gmail ...
 
-        List<string> sites = SiteList.GetSites();
+        List<string> sites = SiteList.GetTrustedSites();
 
 
 
@@ -22,6 +25,14 @@ class Program
 
             foreach (string site in sites)
             {
+                //On récupère le certificat
+                //TODO on va alimenter le modele (url / certificat / whois)
+                //Peut etre qu'il faudra ne faire 3 modele ml.net?
+
+                X509Certificate2 certificate = SslCertificateFetcher.Fetch(site);
+                Whois whois = WhoisFetcher.GetWhois(site);
+
+
                 int counter = 0;
                 webCrawler.NavigateTo(site);
                 var mainScreenshot = webCrawler.TakeScreenshot();

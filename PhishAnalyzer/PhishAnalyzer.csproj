@@ -22,4 +22,7 @@
       <DependentUpon>SiteClassification.mbconfig</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhishHelper\PhishHelper.csproj" />
+  </ItemGroup>
 </Project>

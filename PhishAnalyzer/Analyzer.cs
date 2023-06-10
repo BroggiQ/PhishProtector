@@ -86,7 +86,7 @@ namespace PhishAnalyzer
             globalScore += sourceCodeScore;
 
             //10 points for a reliable from whois
-            int whoisScore = Whois.GetWhoisScore(url);
+            int whoisScore = WhoisScore.GetWhoisScore(url);
             globalScore += whoisScore;
 
 

@@ -17,4 +17,8 @@
     <Folder Include="Screens\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PhishHelper\PhishHelper.csproj" />
+  </ItemGroup>
+
 </Project>

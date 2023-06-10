@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PhishAnalyzer.Models
+namespace PhishHelper.Models
 {
-    internal class WhoisServer
+    public class WhoisServer
     {
         public string Tld { get; set; }
         public string Server { get; set; }

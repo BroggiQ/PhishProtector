@@ -1,13 +1,12 @@
-﻿using NumSharp.Utilities;
-using PhishAnalyzer.Models;
+﻿using PhishHelper.Models;
 using System;
 using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
-namespace PhishAnalyzer
+namespace PhishHelper
 {
-    internal class Whois
+    public static class WhoisFetcher
     {
         //TODO change this format
         public static List<WhoisServer> WhoisServers = new List<WhoisServer>
@@ -39,9 +38,11 @@ namespace PhishAnalyzer
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public static int GetWhoisScore(string url)
+        public static Whois GetWhois(string url)
         {
-            int score = 0;
+
+            Whois whois = new Whois();
+
             var uri = new Uri(url);
             var host = uri.Host;
             var domain = string.Join(".", host.Split('.').Reverse().Take(2).Reverse().ToArray());
@@ -56,7 +57,6 @@ namespace PhishAnalyzer
             {
                 int portNumber = 43;
 
-                StringBuilder strResult = new StringBuilder();
                 TcpClient tcpClinetWhois = new TcpClient(whoisServer, portNumber);
                 NetworkStream networkStreamWhois = tcpClinetWhois.GetStream();
                 BufferedStream bufferedStreamWhois = new BufferedStream(networkStreamWhois);
@@ -69,44 +69,40 @@ namespace PhishAnalyzer
                 DateTime createdDate;
                 DateTime expirationDate;
                 string status;
+
                 while (!streamReaderReceive.EndOfStream)
                 {
                     string line = streamReaderReceive.ReadLine();
-                    string[] lineSplitted = line.Split(':');
-                    if (lineSplitted.Length > 1)
+                    List<string> lineSplitted = line.Split(':').ToList();
+                    if (lineSplitted.Count() > 1)
                     {
                         if (lineSplitted[0].ToLower().Trim() == "created")
                         {
-                            lineSplitted = lineSplitted.RemoveAt(0);
+                            lineSplitted.RemoveAt(0);
                             string date = string.Join(':', lineSplitted);
                             DateTime.TryParse(date, out createdDate);
-                            if (createdDate <= DateTime.Now.AddMonths(-6))
-                                score += 5;
+                            whois.CreatedDate = createdDate;
                         }
                         else if (lineSplitted[0].ToLower().Trim() == "expiry date")
                         {
-                            lineSplitted = lineSplitted.RemoveAt(0);
+                            lineSplitted.RemoveAt(0);
                             string date = string.Join(':', lineSplitted);
                             DateTime.TryParse(date, out expirationDate);
-                            if (expirationDate >= DateTime.Now.AddMonths(6))
-                                score += 5;
+                            whois.ExpirationDate = expirationDate;
+
                         }
                         else if (lineSplitted[0].ToLower().Trim() == "status")
                         {
                             status = lineSplitted[1].Trim();
                             //Active = currently in service
                             //Hold = possibility of problem
-                            if (status.ToLower().Trim() == "active")
-                                score += 5;
+                            whois.Status = status.ToLower().Trim();
                         }
                         //TODO see contact , registrar and nserver
                     }
-
-
-                    strResult.AppendLine(line);
                 }
             }
-            return score;
+            return whois;
         }
     }
 }
