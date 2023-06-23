@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PhishAnalyzer\PhishAnalyzer.csproj" />
+    <ProjectReference Include="..\PhishAnalyzer\PhishProtector.Analyzer.csproj" />
   </ItemGroup>
 
 </Project>

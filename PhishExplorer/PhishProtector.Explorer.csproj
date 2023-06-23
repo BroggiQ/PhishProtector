@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,6 +11,7 @@
     <PackageReference Include="DotNetSeleniumExtras.WaitHelpers" Version="3.11.0" />
     <PackageReference Include="Selenium.Support" Version="4.8.1" />
     <PackageReference Include="Selenium.WebDriver" Version="4.8.1" />
+    <PackageReference Include="Whois" Version="3.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PhishHelper\PhishHelper.csproj" />
+    <ProjectReference Include="..\PhishHelper\PhishProtector.Helper.csproj" />
   </ItemGroup>
 
 </Project>

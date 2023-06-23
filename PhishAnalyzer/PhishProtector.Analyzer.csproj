@@ -23,6 +23,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PhishHelper\PhishHelper.csproj" />
+    <ProjectReference Include="..\PhishHelper\PhishProtector.Helper.csproj" />
   </ItemGroup>
 </Project>
