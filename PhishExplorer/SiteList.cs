@@ -8,6 +8,7 @@ namespace PhishExplorer
         {
             return new List<string>
             {
+                                "Lefigaro.fr",
                 "Google.fr",
                 "Orange.fr",
                 "Ask.com",
@@ -15,7 +16,6 @@ namespace PhishExplorer
                 "Linkedin.com",
                 "Free.fr",
                 "Lemonde.fr",
-                "Lefigaro.fr",
                 "Ebay.fr",
                 "Commentcamarche.net",
                 "Lequipe.fr",

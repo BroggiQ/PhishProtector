@@ -2,7 +2,9 @@
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Interactions;
 using OpenQA.Selenium.Support.UI;
+using PhishProtector.Helper;
 using SeleniumExtras.WaitHelpers;
+using System.Net;
 
 namespace PhishExplorer
 {
@@ -14,7 +16,7 @@ namespace PhishExplorer
         {
             // create a custom profile to accept cookies
             FirefoxProfile profile = new FirefoxProfile();
-            profile.SetPreference("network.cookie.cookieBehavior", 0);
+             profile.SetPreference("network.cookie.cookieBehavior", 0);
 
 
 
@@ -37,15 +39,19 @@ namespace PhishExplorer
         {
             try
             {
+                if (!url.StartsWith("http://") && !url.StartsWith("https://"))
+                {
+                    url = "https://" + url;
+                }
+                Console.WriteLine("Navigating to: " + url);
                 _driver.Navigate().GoToUrl(url);
 
                 // accept cookies
-                List<string> cookieTexts = new List<string>() { "Autoriser les cookies essentiels et optionnels", "Accepter les cookies", "Accepter tout", "Tout accepter", "Accepter les cookies", "Accepter et fermer" };
+                List<string> cookieTexts = new List<string>() { "autoriser les cookies essentiels et optionnels", "accepter les cookies", "accepter tout", "tout accepter", "accepter les cookies", "accepter et fermer" };
                 WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(10));
                 foreach (string cookieText in cookieTexts)
                 {
-                    IList<IWebElement> cookieButtons = _driver.FindElements(By.XPath("//button[.='" + cookieText + "'] | //input[.='" + cookieText + "'] | //span[.='" + cookieText + "']"));
-                    // IList<IWebElement> cookieButtons = driver.FindElements(By.XPath("//*[@value='" + cookieText + "']"));
+                    IList<IWebElement> cookieButtons = _driver.FindElements(By.XPath("//button[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + cookieText + "')] | //input[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + cookieText + "')] | //span[contains(translate(text(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), '" + cookieText + "')]"));                    // IList<IWebElement> cookieButtons = driver.FindElements(By.XPath("//*[@value='" + cookieText + "']"));
                     if (cookieButtons.Count > 0)
                     {
                         IWebElement cookieButton = cookieButtons[0];
@@ -60,13 +66,18 @@ namespace PhishExplorer
                             }
                             else
                             {
+
+
                                 IJavaScriptExecutor js = (IJavaScriptExecutor)_driver;
-                                js.ExecuteScript("arguments[0].scrollIntoView(true);", cookieButton);
+                               // string elementId = cookieButton.GetAttribute("id");
+                              // js.ExecuteScript("document.getElementById("+ elementId+").click();");
+                                js.ExecuteScript("arguments[0].click();", cookieButton);
+                                //js.ExecuteScript("arguments[0].scrollIntoView(true);", cookieButton);
 
-                                Actions actions = new Actions(_driver);
-                                actions.MoveToElement(cookieButton).Perform();
+                            //    Actions actions = new Actions(_driver);
+                              //  actions.MoveToElement(cookieButton).Perform();
 
-                                cookieButton.Click();
+                            //    cookieButton.Click();
                                 break;
 
 
@@ -78,37 +89,77 @@ namespace PhishExplorer
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Consent error" + ex.Message);
+                Console.WriteLine("NavigateTo " + ex.Message);
             }
         }
 
         public List<string> GetInternalLinks(string baseUrl)
         {
-            var links = new List<string>();
-            var anchorTags = _driver.FindElements(By.TagName("a"));
-            var uriSite = new Uri(baseUrl);
-
-            var hrefs = anchorTags.Select(anchor => anchor.GetAttribute("href")).ToList();
-            hrefs = hrefs.Where(h => h != null && h.StartsWith("http") && h.Contains(uriSite.Host) && baseUrl != h).ToList();
-            /*foreach (var anchorTag in anchorTags)
+            try
             {
-                var href = anchorTag.GetAttribute("href");
-                //On précse que l'on reste sur le meme site
-                if (!string.IsNullOrEmpty(href) && href.StartsWith(baseUrl))
-                {
-                    links.Add(href);
-                }
-            }*/
+                var links = new List<string>();
+                /*      WebDriverWait wait = new WebDriverWait(_driver, TimeSpan.FromSeconds(3));
+                      wait.Until(drv => drv.FindElements(By.TagName("a")).Count > 0);
 
-            return hrefs.Distinct().Take(20).ToList();
+                      var hrefs = _driver.FindElements(By.TagName("a")).Select(anchor => anchor.GetAttribute("href"))
+                                      .ToList(); 
+
+                          string hostName = SiteHelper.GetHostFromUrl(baseUrl);
+
+          */
+                string hostName = SiteHelper.GetHostFromUrl(baseUrl);
+
+                var anchorTags = _driver.FindElements(By.TagName("a"));
+                List<string> hrefs = new List<string>();
+
+
+
+                //var hrefs = anchorTags.Select(anchor => anchor.GetAttribute("href")).ToList();
+
+
+                foreach (var anchor in anchorTags)
+                {
+                    try
+                    {
+                        hrefs.Add(anchor.GetAttribute("href"));
+                    }
+                    catch (StaleElementReferenceException)
+                    {
+                    }
+                    catch (Exception ex)
+                    {
+                        // handle any other type of exception
+                        Console.WriteLine("An error occurred: " + ex.Message);
+                    }
+                }
+ 
+
+                hrefs = hrefs.Where(h => h != null && h.StartsWith("http") && h.Contains(hostName) && baseUrl != h).ToList();
+                /*foreach (var anchorTag in anchorTags)
+                {
+                    var href = anchorTag.GetAttribute("href");
+                    //On précse que l'on reste sur le meme site
+                    if (!string.IsNullOrEmpty(href) && href.StartsWith(baseUrl))
+                    {
+                        links.Add(href);
+                    }
+                }*/
+
+                return hrefs.Distinct().Take(20).ToList();
+            }
+            catch (WebDriverTimeoutException)
+            {
+                Console.WriteLine("Timeout. Current page content:");
+                Console.WriteLine(_driver.PageSource);
+                throw;  // re-throw the exception
+            }
         }
 
         public Screenshot TakeScreenshot()
         {
             try
             {
-
-                return ((ITakesScreenshot)_driver).GetScreenshot();
+                 return ((ITakesScreenshot)_driver).GetScreenshot();
             }
             catch (Exception ex)
             {

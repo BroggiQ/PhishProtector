@@ -1,5 +1,5 @@
 ﻿using OpenQA.Selenium;
-
+using PhishProtector.Helper;
 
 namespace PhishExplorer
 {
@@ -22,8 +22,10 @@ namespace PhishExplorer
         {
 
             // Extract the site name without the protocol and the extension
-            var uriSite = new Uri(originalSiteUrl);
-            string siteName = uriSite.Host;
+            string siteName = SiteHelper.GetHostFromUrl(originalSiteUrl);
+
+
+
  
             string screenName = string.Format("{0}_{1}_{2}.{3}", DateTime.Now.ToString("yyyy-MM-dd"), siteName, counter, "png");
 
