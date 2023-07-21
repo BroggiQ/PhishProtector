@@ -79,10 +79,22 @@ class Program
 
         // Get WHOIS information
         var whois = new WhoisLookup();
-        WhoisResponse response = whois.Lookup(site);
-        data[4] = GetMonthsSinceCreation(response).ToString();
-        data[5] = response.Registrant?.Name?.Trim() ?? "";
-        data[6] = response.Registrant?.Address?.Last()?.Trim() ?? "";
+        WhoisResponse response = null;
+        try
+        {
+            response = whois.Lookup(site);
+            data[4] = GetMonthsSinceCreation(response).ToString();
+            data[5] = response.Registrant?.Name?.Trim() ?? "";
+            data[6] = response.Registrant?.Address?.Last()?.Trim() ?? "";
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error getting WHOIS information for site {site}: {ex.Message}");
+            // Fill with default values if there's an error
+            data[4] = "0";
+            data[5] = "";
+            data[6] = "";
+        }
 
         // Get SSL certificate information
         using (var certificate = SslCertificateFetcher.Fetch(site))
