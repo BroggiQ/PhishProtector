@@ -1,6 +1,9 @@
 ﻿
 namespace PhishAnalyzer.Models
 {
+    /// <summary>
+    /// Certificate Info of the website get from the browser extension
+    /// </summary>
     public class CertificateInfo
     {
         public string Issuer { get; set; }

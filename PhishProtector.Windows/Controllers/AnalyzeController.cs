@@ -21,7 +21,6 @@ namespace PhishProtector.Windows.Controllers
         /// <param name="certificateInfoJson">The certificate received</param>
         /// <returns></returns>
         [HttpPost]
-        //  public IActionResult Post([FromForm] string url, [FromForm] byte[] screenBytes)
         public IActionResult Post([FromForm] string url, [FromForm] string screenBytes, [FromForm] string certificateInfoJson)
         {
             try

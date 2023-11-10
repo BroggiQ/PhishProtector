@@ -2,6 +2,11 @@
 
 namespace PhishExplorer
 {
+    /// <summary>
+    /// list of websites most at risk of being the target of phshing
+    /// TODO create a list by country
+    /// Move this list in another format sql lite?
+    /// </summary>
     static class SiteList
     {
         public static List<string> GetTrustedSites()
